@@ -5,6 +5,7 @@ from system_logs import generate_system_log
 from application_logs import generate_application_log
 from security_logs import generate_security_log
 import random
+import time
 
 
 def generate_log():
@@ -18,5 +19,10 @@ def generate_log():
 
 
 if __name__ == "__main__":
-    for i in range(10):
-        print(json.dumps(generate_log(), indent=4))
+    try:
+        while True:
+            log_entry = generate_log()
+            print(json.dumps(log_entry, indent=4))
+            time.sleep(1)  # Wait for 1 second before generating the next log
+    except KeyboardInterrupt:
+        print("Log generation stopped by user.")
