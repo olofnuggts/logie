@@ -1,0 +1,3 @@
+from .system_logs import generate_system_log
+from .application_logs import generate_application_log
+from .security_logs import generate_security_log
