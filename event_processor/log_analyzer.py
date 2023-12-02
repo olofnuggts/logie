@@ -1,6 +1,8 @@
 # log_analyzer.py
 
 from db_connector.mongodb_connector import get_database
+import collections
+
 
 def fetch_logs():
     db = get_database()
@@ -9,10 +11,53 @@ def fetch_logs():
     logs = collection.find({})
     return list(logs)
 
+
+def detect_brute_force(logs):
+    failed_logins = collections.defaultdict(int)
+    for log in logs:
+        if (
+            log["log_type"] == "Security"
+            and log["event_type"] == "Login Attempt"
+            and log["status"] == "Failed"
+        ):
+            failed_logins[log["source"]] += 1
+
+    # Prüfen, ob die Anzahl der fehlgeschlagenen Versuche einen Schwellenwert überschreitet
+    for source, count in failed_logins.items():
+        if count > 5:  # Schwellenwert, zum Beispiel 5
+            print(f"Potenzieller Brute-Force-Angriff erkannt von: {source}")
+
+
+def detect_port_scanning(logs, threshold=100):
+    # Erkennen von Port-Scanning-Aktivitäten
+    port_activity = collections.defaultdict(int)
+    for log in logs:
+        if log["log_type"] == "Security" and log["event_type"] == "Connection Attempt":
+            port_activity[log["source"]] += 1
+
+    for source, count in port_activity.items():
+        if count > threshold:
+            print(f"Potenzielle Port-Scanning-Aktivität erkannt von {source}")
+
+
+def detect_application_errors(logs, threshold=10):
+    # Erkennen ungewöhnlicher Anwendungsfehler
+    app_errors = collections.defaultdict(int)
+    for log in logs:
+        if log["log_type"] == "Application" and log["event_type"] == "Error":
+            app_errors[log["application_name"]] += 1
+
+    for app, count in app_errors.items():
+        if count > threshold:
+            print(f"Ungewöhnliche Fehlerhäufigkeit in Anwendung {app}")
+
+
 def analyze_logs(logs):
-    # Implementieren Sie hier Ihre Analyse-Logik
-    # Zum Beispiel: Erkennung von wiederholten Login-Fehlversuchen, ungewöhnlichen Systemereignissen usw.
-    pass
+    # Ein einfacher Ansatz, um wiederholte fehlgeschlagene Login-Versuche zu identifizieren
+    detect_brute_force(logs)
+    detect_port_scanning(logs)
+    detect_application_errors(logs)
+
 
 if __name__ == "__main__":
     logs = fetch_logs()
