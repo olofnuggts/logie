@@ -3,8 +3,8 @@ import time
 from system_logs import generate_system_log
 from application_logs import generate_application_log
 from security_logs import generate_security_log
-from db_connector.mongodb_connector import store_log  # Import the store_log function
 import random
+from db_connector.mongodb_connector import store_log
 
 
 def generate_log():
