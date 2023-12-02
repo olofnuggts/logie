@@ -1,6 +1,7 @@
 # log_analyzer.py
 
 from db_connector.mongodb_connector import get_database
+from alert_system import send_email_alert
 import collections
 
 
@@ -23,9 +24,23 @@ def detect_brute_force(logs):
             failed_logins[log["source"]] += 1
 
     # Prüfen, ob die Anzahl der fehlgeschlagenen Versuche einen Schwellenwert überschreitet
+    angriff_erkannt = False
     for source, count in failed_logins.items():
         if count > 5:  # Schwellenwert, zum Beispiel 5
             print(f"Potenzieller Brute-Force-Angriff erkannt von: {source}")
+
+    #   Dieser Teil das Code, wenn eine angriff_erkannt ist
+    if angriff_erkannt:
+        send_email_alert(
+            "Brute-Force-Alarm",
+            f"Brute-Force-Angriff erkannt von {source}",
+            "empfaenger@example.com",
+            "absender@example.com",
+            "smtp.example.com",
+            587,
+            "smtp_user",
+            "smtp_password",
+        )
 
 
 def detect_port_scanning(logs, threshold=100):
