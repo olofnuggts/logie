@@ -15,6 +15,9 @@ setup(
     install_requires=[
         "pymongo",  # Add other dependencies as needed
         "faker",  # Assuming Faker is used for generating log data
+        "numpy",
+        "joblib",
+        "scikit-learn",
         # Add other dependencies as required by your project
     ],
     classifiers=[
