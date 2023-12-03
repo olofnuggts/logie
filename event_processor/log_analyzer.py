@@ -26,20 +26,15 @@ def detect_brute_force(logs):
     # Prüfen, ob die Anzahl der fehlgeschlagenen Versuche einen Schwellenwert überschreitet
     angriff_erkannt = False
     for source, count in failed_logins.items():
-        if count > 5:  # Schwellenwert, zum Beispiel 5
+        if count >= 1:  # Schwellenwert, zum Beispiel 5
             print(f"Potenzieller Brute-Force-Angriff erkannt von: {source}")
+            angriff_erkannt = True
 
     #   Dieser Teil das Code, wenn eine angriff_erkannt ist
     if angriff_erkannt:
+        alert_message = f"Potential DDoS attack detected from {source}"
         send_email_alert(
-            "Brute-Force-Alarm",
-            f"Brute-Force-Angriff erkannt von {source}",
-            "empfaenger@example.com",
-            "absender@example.com",
-            "smtp.example.com",
-            587,
-            "smtp_user",
-            "smtp_password",
+            "DDoS Alert", alert_message, "receiver@example.com", "sender@example.com"
         )
 
 
