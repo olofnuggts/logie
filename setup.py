@@ -1,13 +1,16 @@
 from setuptools import setup, find_packages
 
+with open("README.md", "r") as f:
+    long_description = f.read()
+
 setup(
     name="SIEM-Simulator",
     version="0.1.0",  # Update the version number for new releases
-    author="olof nuggets",  # Replace with your name
+    author="olof nuggets",
     description="A simple SIEM (Security Information and Event Management) data simulator.",
-    long_description=open("README.md").read(),
+    long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/olofnuggts/logie",  # Replace with the URL to your repository
+    url="https://github.com/olofnuggts/logie",
     packages=find_packages(),
     install_requires=[
         "pymongo",  # Add other dependencies as needed
@@ -25,3 +28,4 @@ setup(
     ],
     python_requires=">=3.7",  # Minimum version requirement of the python
 )
+f.close()
